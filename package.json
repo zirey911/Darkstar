@@ -1,0 +1,24 @@
+{
+  "name": "darkstar",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/web"
+  ],
+  "engines": {
+    "node": ">=24.15 <25"
+  },
+  "scripts": {
+    "dev": "npm run dev:web",
+    "dev:web": "npm run dev --workspace @darkstar/web",
+    "dev:backend": "node scripts/backend.mjs dev",
+    "typecheck": "npm run typecheck --workspace @darkstar/web",
+    "test:web": "npm run test --workspace @darkstar/web",
+    "test:backend": "node scripts/backend.mjs test",
+    "test": "npm run test:web && npm run test:backend",
+    "lint:web": "npm run lint --workspace @darkstar/web",
+    "lint:backend": "node scripts/backend.mjs lint",
+    "lint": "npm run lint:web && npm run lint:backend",
+    "build": "npm run build --workspace @darkstar/web"
+  }
+}
