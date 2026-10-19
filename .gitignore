@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+
+# JS
+node_modules/
+.next/
+dist/
+build/
+coverage/
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+
+# Large local data
+data/raw/
+data/processed/
+*.tif
+*.tiff
+*.vrt
+*.nc
+*.h5
