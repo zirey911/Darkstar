@@ -1,6 +1,12 @@
 # NASA data research
 
-Candidate resources, **not a confirmed list of official challenge datasets**:
+Integrated: NASA PDS MOLA MEGDR v2 topography/counts at 16 pixels per degree and
+Caltech CTX V01 surface imagery streamed through Esri, with NASA Mars Trek Viking
+MDIM 2.1 imagery as fallback, plus a native 20 m numerical CTX DEM crop
+from the Mars 2020 Science Investigation Jezero mosaic (PDS v1.0). Exact products, provenance, resolution and
+limitations are documented in [TERRAIN.md](TERRAIN.md).
+
+Additional candidate resources, **not a confirmed list of official challenge datasets**:
 
 | Resource | URL | Potential use |
 | --- | --- | --- |

@@ -1,0 +1,21 @@
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, expect, test, vi } from "vitest";
+import Marswalk from "../app/terrain/Marswalk";
+import { readGuideContext, saveGuideContext } from "../app/guide-context";
+afterEach(()=>{vi.unstubAllGlobals();sessionStorage.clear();});
+test("replanning clears stale chat context and reloading the same example cancels its request",async()=>{
+ let complete!:(value:unknown)=>void;
+ const fetcher=vi.fn().mockImplementation(()=>new Promise(resolve=>{complete=resolve;}));
+ vi.stubGlobal("fetch",fetcher);
+ render(<Marswalk start={{lat:18.4447,lon:77.4508}} end={{lat:18.45,lon:77.46}} onProfile={vi.fn()} onExample={vi.fn()}/>);
+ fireEvent.click(screen.getByRole("button",{name:"Load example Marswalk · Jezero"}));
+ saveGuideContext("marswalk","previous-result");
+ fireEvent.click(screen.getByRole("button",{name:"Plan Marswalk"}));
+ expect(readGuideContext().tokens.marswalk).toBeUndefined();
+ fireEvent.click(screen.getByRole("button",{name:"Load example Marswalk · Jezero"}));
+ expect(fetcher.mock.calls[0][1].signal.aborted).toBe(true);
+ expect(screen.getByRole("button",{name:"Plan Marswalk"})).toBeEnabled();
+ await act(async()=>{complete({ok:true,json:async()=>({legs:[]})});});
+ expect(screen.queryByRole("region",{name:"Marswalk mission summary"})).toBeNull();
+ expect(readGuideContext().tokens.marswalk).toBeUndefined();
+});

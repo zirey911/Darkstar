@@ -1,24 +1,25 @@
 # Architecture
 
-Darkstar currently contains development infrastructure only. Mapping, terrain analysis,
-routing, resource calculations, and simulations are deferred until competition rules
-are confirmed. The project is independent; NASA affiliation or endorsement is not implied.
+Darkstar contains educational AI chat, global NASA Viking imagery, and regional
+MOLA terrain analysis/A* routing. Advanced resource calculations and simulations
+are not implemented. The project is independent; NASA affiliation or endorsement is not implied.
 
 ## Layout and responsibilities
 
 - `apps/web`: Next.js App Router, strict TypeScript, Tailwind CSS, ESLint,
-  Vitest and React Testing Library. Currently a development landing page.
+  Vitest and React Testing Library. Mars chat UI and same-origin `/api/chat` server proxy.
 - `services/navigation`: installable Python 3.11+ package using FastAPI,
-  Pydantic and Uvicorn. Currently exposes only `GET /health`.
+  Pydantic and Uvicorn. Exposes `GET /health`, `POST /chat`, and `/terrain` metadata, route and imagery APIs.
 - `packages/shared`: reserved for future API contracts; no runtime package yet.
 - `docs`: preserved project research plus architecture and development guidance.
 - `data/raw`, `data/processed`: ignored local data directories, never bundled into the web app.
 - `scripts`: root command helpers; `.github/workflows`: independent web/backend CI jobs.
 
-The services run independently. Future communication may use HTTP JSON with schemas
-published through FastAPI OpenAPI. Endpoint contracts, deployment origin, CORS policy,
-and coordinate/unit semantics must be decided before integration. No network integration,
-authentication, database, or environment secrets are currently needed.
+The services run independently; Next.js forwards HTTP JSON chat requests to Python.
+Python owns provider credentials and validates bounded conversation histories.
+See [chat configuration and limits](CHAT.md). No database or authentication exists.
+The terrain page is `/terrain`; Python owns windowed raster reads and pathfinding.
+See [terrain contracts, coordinates and limitations](TERRAIN.md).
 
 ## Choices and planned dependencies
 
@@ -27,10 +28,10 @@ isolates the backend; a frozen development requirements file records the tested
 resolution while `pyproject.toml` declares package compatibility ranges. Docker and
 native build systems are unnecessary at this stage.
 
-Planned, not installed: NumPy for numerical arrays, Rasterio for raster ingestion,
-PyProj for coordinate transformations, NetworkX for graph research, and MapLibre GL JS
-for browser map rendering. Evaluate these only when the relevant work is authorized.
-No data-processing or route algorithms exist yet.
+NumPy and rasterio support terrain processing. A* uses Python's standard heap queue.
+The map uses SVG with equirectangular NASA Trek tiles, avoiding Earth-map defaults
+and additional frontend mapping dependencies. No NetworkX or standalone PyProj is
+needed for this bounded spherical-grid implementation.
 
 ## Planetary geospatial constraints
 

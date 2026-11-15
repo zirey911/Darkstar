@@ -1,0 +1,187 @@
+{
+  "retrieved_on": "2026-11-15",
+  "update_policy": "Pinned historical extracts; no automatic refresh or live conditions.",
+  "records": [
+    {
+      "id": "rems",
+      "title": "Curiosity / Gale Crater weather",
+      "kind": "Historical observation summary — outreach",
+      "site": "Curiosity / Gale Crater",
+      "reference_centre": {
+        "lat": -5.37,
+        "lon": 137.81
+      },
+      "date": "2026-08-25",
+      "sol": "4995",
+      "coverage": "Rover-local measurements along its traverse; exact sample coordinates are not supplied in this feed. Crater centre is a reference only, not the sensor location.",
+      "resolution": "Daily summary of sampled rover observations; no geographic grid.",
+      "uncertainty": "Numerical uncertainties are not supplied by the summary. Sampling gaps and rover/instrument effects can affect extrema. Outreach data, not operational or calibrated PDS time series.",
+      "source": "https://mars.nasa.gov/rss/api/?feed=weather&category=msl&feedtype=json",
+      "archive": "https://pdsatmospheres.nmsu.edu/data_and_services/atmospheres_data/MARS/curiosity/rems.html",
+      "source_sha256": "1c3f64aa69ab00e8b90905734fb9b2d0838979b74f97446075d74b77d0fc4749",
+      "source_record": {
+        "id": "4746",
+        "terrestrial_date": "2026-08-25",
+        "sol": "4995",
+        "ls": "341",
+        "season": "Month 12",
+        "min_temp": "-71",
+        "max_temp": "-5",
+        "pressure": "777",
+        "pressure_string": "Higher",
+        "abs_humidity": "--",
+        "wind_speed": "--",
+        "wind_direction": "--",
+        "atmo_opacity": "Sunny",
+        "sunrise": "06:46",
+        "sunset": "18:51",
+        "local_uv_irradiance_index": "Moderate",
+        "min_gts_temp": "-84",
+        "max_gts_temp": "4"
+      },
+      "values": [
+        {
+          "label": "Air temperature minimum",
+          "value": -71.0,
+          "unit": "°C"
+        },
+        {
+          "label": "Air temperature maximum",
+          "value": -5.0,
+          "unit": "°C"
+        },
+        {
+          "label": "Ground temperature minimum",
+          "value": -84.0,
+          "unit": "°C"
+        },
+        {
+          "label": "Ground temperature maximum",
+          "value": 4.0,
+          "unit": "°C"
+        },
+        {
+          "label": "Atmospheric pressure",
+          "value": 777.0,
+          "unit": "Pa"
+        }
+      ]
+    },
+    {
+      "id": "meda",
+      "title": "Perseverance / Jezero region weather",
+      "kind": "Historical observation summary — outreach",
+      "site": "Perseverance / Jezero region",
+      "reference_centre": {
+        "lat": 18.21,
+        "lon": 77.62
+      },
+      "date": "2024-04-27",
+      "sol": "1133",
+      "coverage": "Rover-local measurements along its traverse; exact sample coordinates are not supplied in this feed. Crater centre is a reference only, not the sensor location.",
+      "resolution": "Daily summary of sampled rover observations; no geographic grid.",
+      "uncertainty": "Numerical uncertainties are not supplied by the summary. Sampling gaps and rover/instrument effects can affect extrema. Outreach data, not operational or calibrated PDS time series.",
+      "source": "https://mars.nasa.gov/rss/api/?feed=weather&category=mars2020&feedtype=json",
+      "archive": "https://pdsatmospheres.nmsu.edu/data_and_services/atmospheres_data/PERSEVERANCE/meda.html",
+      "source_sha256": "9ff9db7675b5165e6d0547f9b86b75cea2cd1badfd27ea5aec4fe6956a47ac35",
+      "source_record": {
+        "terrestrial_date": "2024-04-27",
+        "sol": "1133",
+        "ls": "244.106",
+        "season": "late autumn",
+        "min_temp": -79.3,
+        "max_temp": -24.7,
+        "pressure": 778.9,
+        "sunrise": "06:18:07",
+        "sunset": "17:13:51"
+      },
+      "values": [
+        {
+          "label": "Air temperature minimum",
+          "value": -79.3,
+          "unit": "°C"
+        },
+        {
+          "label": "Air temperature maximum",
+          "value": -24.7,
+          "unit": "°C"
+        },
+        {
+          "label": "Ground temperature minimum",
+          "value": null,
+          "unit": "°C"
+        },
+        {
+          "label": "Ground temperature maximum",
+          "value": null,
+          "unit": "°C"
+        },
+        {
+          "label": "Atmospheric pressure",
+          "value": 778.9,
+          "unit": "Pa"
+        }
+      ]
+    },
+    {
+      "id": "mastcam-tau",
+      "title": "Curiosity Mastcam aerosol optical depth",
+      "kind": "Historical derived observation — PDS review copy",
+      "site": "Curiosity / Gale Crater",
+      "reference_centre": {
+        "lat": -5.37,
+        "lon": 137.81
+      },
+      "date": "MSL sol 3953.5493",
+      "coverage": "Atmospheric column above Curiosity, not surface dust concentration. Product time span: 2012-09-08T23:17:00.000Z to 2023-09-19T18:56:00.000Z.",
+      "resolution": "One solar-image retrieval at 880 nm, not a regional or daily average.",
+      "uncertainty": "Source Sigma = 0.030. Confidence convention not specified in the table label. Aerosols include dust and ice. The linked PDS copy is under /review/; certification is not asserted. No visibility, toxicity or storm severity is inferred.",
+      "source": "https://atmos.nmsu.edu/PDS/review/PDS4/msl_mmm_tau_bundle/data_derived/msl_tau_880.csv",
+      "archive": "https://pds-atmospheres.nmsu.edu/data_and_services/atmospheres_data/MARS/curiosity/atmospheric_opacity.html",
+      "label_source": "https://atmos.nmsu.edu/PDS/review/PDS4/msl_mmm_tau_bundle/data_derived/msl_tau_880.xml",
+      "source_sha256": "7df67b66366efee31c30a838b14aefc6cb5ac8f734cf8d05ac2ab56d54dc7566",
+      "source_record": [
+        "3953ML1047940011206693C00_DXXX",
+        "3953.5493",
+        " 121.2",
+        " 0.591",
+        " 0.030"
+      ],
+      "values": [
+        {
+          "label": "Aerosol optical depth at 880 nm",
+          "value": 0.591,
+          "unit": "dimensionless"
+        },
+        {
+          "label": "Reported Sigma",
+          "value": 0.03,
+          "unit": "dimensionless"
+        }
+      ]
+    },
+    {
+      "id": "rad",
+      "title": "Curiosity RAD ionizing radiation",
+      "kind": "Historical published measurement summary",
+      "site": "Curiosity / Gale Crater",
+      "reference_centre": {
+        "lat": -5.37,
+        "lon": 137.81
+      },
+      "date": "August 2012–June 2013",
+      "coverage": "Curiosity surface observations in Gale Crater; not a Jezero or planet-wide dose map.",
+      "resolution": "Multi-month average reported by NASA, not a live radiation monitor.",
+      "uncertainty": "Numerical uncertainty is not supplied in the NASA news summary. Solar events, shielding and solar-cycle conditions affect exposure; not a personal dosimeter or an EVA dose prediction. UV and MEDA optical radiation are not equivalent to ionizing dose.",
+      "source": "https://www.nasa.gov/news-release/nasa-rover-results-include-first-age-measurement-on-mars-and-help-for-human-exploration/",
+      "archive": "https://pds-geosciences.wustl.edu/missions/msl/index.htm",
+      "values": [
+        {
+          "label": "Reported mean radiation dose equivalent rate",
+          "value": 0.67,
+          "unit": "mSv/day"
+        }
+      ]
+    }
+  ]
+}

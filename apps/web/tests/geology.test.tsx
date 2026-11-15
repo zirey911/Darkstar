@@ -1,0 +1,21 @@
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, expect, test, vi } from "vitest";
+import Terrain from "../app/terrain/page";
+afterEach(()=>vi.unstubAllGlobals());
+test("geology tiles align in native Mars coordinates and source destinations preserve habitat",async()=>{
+ vi.stubGlobal("fetch",vi.fn().mockImplementation(async(url)=>({ok:true,json:async()=>url.includes("metadata")?{provenance:{dataset:"MOLA fixture",elevation_datum:"areoid"},nominal_cell_m:3704}:url.includes("geology-inspect")?{units:[{unit:"HNt",description:"Hesperian and Noachian transition unit"}],note:"Regional mapped units"}:{coordinate:{lat:18.21,lon:77.62},cell_centre:{lat:18.2,lon:77.6},elevation_m:-2500,observations:1,slope_deg:2,support:"observed",routing_supported:true,nominal_cell_m:3704,datum:"areoid"}})));
+ render(<Terrain/>);await screen.findByText(/MOLA fixture/);
+ fireEvent.click(screen.getByRole("button",{name:"Geology"}));
+ const map=screen.getByRole("img",{name:/Global Mars map/});
+ const tile=map.querySelector('image[href*="/geology/2/1/2"]')!;
+ expect(tile).toHaveAttribute("x","0");expect(tile).toHaveAttribute("y","-90");expect(tile).toHaveAttribute("width","90");
+ expect(map.querySelector('image[href*="/tiles/"]')).toBeNull();
+ fireEvent.keyDown(map,{key:"Enter"});expect(await screen.findByText("HNt")).toBeVisible();
+ fireEvent.click(screen.getByRole("button",{name:"Marswalk"}));
+ fireEvent.change(screen.getByLabelText("Verified science destination"),{target:{value:"Jezero Crater"}});
+ expect((screen.getByLabelText("Science objective") as HTMLInputElement).value).toContain("Jezero");
+ expect(screen.getByRole("region",{name:"Marswalk planner"})).toHaveTextContent("Habitat (H): 60.0000° N, 30.0000° E");
+ expect(screen.getByRole("region",{name:"Marswalk planner"})).toHaveTextContent("18.2100° N, 77.6200° E");
+ expect(screen.getByRole("link",{name:"USGS coordinates"})).toHaveAttribute("href","https://planetarynames.wr.usgs.gov/Feature/14300");
+ await waitFor(()=>expect(map.querySelector('image[href*="/geology/6/28/45"]')).toBeTruthy());
+});

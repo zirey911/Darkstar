@@ -15,7 +15,9 @@ Explore an interactive Mars navigation and expedition-planning experience ground
 - Scientific provenance and uncertainty disclosure
 
 ## Status
-Research and planning only. No competition implementation has begun.
+Educational AI chat and a regional terrain-routing foundation are implemented.
+Global Viking imagery and MOLA-based routes are exploratory, not validated vehicle navigation.
+The exact official challenge requirements and deliverables are not recorded here.
 
 ## Principles
 1. NASA data must inform the actual decisions.

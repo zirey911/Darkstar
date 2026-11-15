@@ -11,7 +11,7 @@ if (!existsSync(python)) {
   process.exit(1);
 }
 const commands = {
-  dev: ["-m", "uvicorn", "darkstar_navigation.main:app", "--reload", "--host", "127.0.0.1"],
+  dev: ["-m", "uvicorn", "darkstar_navigation.main:app", "--app-dir", path.join(service, "src"), "--reload", "--host", "127.0.0.1"],
   test: ["-m", "pytest"],
   lint: ["-m", "ruff", "check", "."],
 };

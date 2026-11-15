@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Darkstar",
-  description: "Mars navigation research — development environment.",
+  description: "Darkstar — an educational AI guide to Martian survival.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -20,7 +20,8 @@ mkdir -p data/raw data/processed
 On Windows, use `py -3.12 -m venv services/navigation/.venv` and replace
 `services/navigation/.venv/bin/python` with `services/navigation/.venv/Scripts/python.exe`.
 The root backend command helper automatically selects the platform's virtual environment.
-No activation or `.env` file is needed. Do not put credentials in tracked files.
+No activation is needed. The Python service loads `services/navigation/.env`;
+add your key there and restart the backend. Do not put credentials in tracked files.
 
 ## Run
 
@@ -34,7 +35,7 @@ npm run dev:backend
 Frontend: http://localhost:3000. Backend: http://127.0.0.1:8000.
 `curl --fail http://127.0.0.1:8000/health` should return `{"status":"ok"}`.
 FastAPI API documentation is at `/docs`. Both processes stop with Ctrl+C.
-The landing page does not call the backend yet.
+The chat page calls the backend through a Next.js server route. See [chat setup](CHAT.md) for provider credentials.
 
 ## Verify
 
@@ -84,3 +85,10 @@ release available. The suggested forced downgrade of Next lint tooling was not a
 
 The current Starlette TestClient emits a deprecation warning for HTTPX; tests pass.
 Evaluate its recommended HTTPX2 migration when updating the testing stack.
+
+## Terrain foundation
+
+The `/terrain` page needs the prepared MOLA numerical dataset. See [TERRAIN.md](TERRAIN.md)
+for the one-time download command, NASA sources, regional limits and verification.
+The default example (60°N, 30°E to 61°N, 32°E) is exercised against actual MOLA data.
+Missing terrain produces a setup error; it never falls back to synthetic data.
