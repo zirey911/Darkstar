@@ -4,11 +4,15 @@ import base64
 import hashlib
 import hmac
 import json
+import os
 import secrets
 import time
 from functools import wraps
 
-_KEY = secrets.token_bytes(32)  # Restart invalidates snapshots; never sent to the browser.
+_secret = os.getenv("DARKSTAR_CONTEXT_SECRET", "")
+if os.getenv("VERCEL") and len(_secret) < 32:
+    raise RuntimeError("Set DARKSTAR_CONTEXT_SECRET to a shared secret of at least 32 characters")
+_KEY = _secret.encode() if _secret else secrets.token_bytes(32)
 TTL = 21600
 
 

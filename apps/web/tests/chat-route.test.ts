@@ -25,3 +25,17 @@ test("preserves verified citations and context returned by Python",async()=>{
  vi.stubGlobal("fetch",vi.fn().mockResolvedValue(Response.json(body)));
  expect(await (await POST(request())).json()).toEqual(body);
 });
+
+test("both proxies prefer the private service binding, including its base path",async()=>{
+ const {POST:terrainPost}=await import('../app/api/terrain/[...path]/route');
+ const {NextRequest}=await import('next/server');
+ vi.stubEnv('NAVIGATION_URL','https://navigation.internal/binding/');
+ vi.stubEnv('DARKSTAR_API_URL','https://legacy.example');
+ try{
+  const fetcher=vi.fn().mockImplementation(async()=>Response.json({reply:'Fixture'}));
+  vi.stubGlobal('fetch',fetcher);
+  await POST(request());
+  await terrainPost(new NextRequest('http://localhost/api/terrain/marswalk',{method:'POST',body:'{}'}),{params:Promise.resolve({path:['marswalk']})});
+  expect(fetcher.mock.calls.map(c=>c[0])).toEqual(['https://navigation.internal/binding/chat','https://navigation.internal/binding/terrain/marswalk']);
+ }finally{vi.unstubAllEnvs();}
+});

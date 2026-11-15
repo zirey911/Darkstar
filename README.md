@@ -110,36 +110,58 @@ If this machine's sandbox prevents Turbopack from binding its internal worker po
 `npm run build --workspace @darkstar/web -- --webpack` performs a production build
 using Next.js's alternative bundler. This does not disable SSR.
 
-## Public hosting
+## Vercel Services deployment
 
-Public deployment is **not yet verified**. The intended split is Vercel for
-`apps/web` and a Python service for FastAPI. Account authentication and any billing
-approval must be completed before deployment.
+Use **one Vercel project**, with its root at the repository root (not `apps/web`).
+The root `vercel.json` declares `web` (Next.js) and `navigation` (FastAPI).
+The catch-all rewrite sends public requests to `web` only. The private
+`web` → `navigation` binding injects `NAVIGATION_URL` at runtime; do not manually
+set this variable. Both Next.js API proxies prefer it, then the legacy
+`DARKSTAR_API_URL`, then localhost. Browser requests remain same-origin, so no
+wildcard CORS policy or public FastAPI rewrite is needed.
 
-- Vercel: import this repository, select the Next.js project at `apps/web`, Node
-  24.x, and include repository files outside the root for npm workspace resolution.
-  Set server-only `DARKSTAR_API_URL` to the backend HTTPS URL, then redeploy.
-- Python host: retain the repository scripts and `data/processed` paths. Install
-  the backend dependencies and run both terrain preparation scripts during the
-  build. Use Python 3.12; numerical data must be present in the runtime image or
-  persistent storage. The backend command from the repository root is:
-  `python -m uvicorn darkstar_navigation.main:app --app-dir services/navigation/src --host 0.0.0.0 --port "$PORT" --workers 1`.
-- Set `LLM_PROVIDER`, `LLM_MODEL` and the secret `LLM_API_KEY` in the Python host's
-  secret environment settings only. Do not upload the local `.env` to GitHub or
-  Vercel. Do not print its contents. `LLM_BASE_URL` is optional.
-- Browsers call same-origin Next.js `/api` routes; Next.js contacts FastAPI
-  server-to-server. This architecture requires **no cross-origin browser CORS
-  allowance**. Do not add a wildcard CORS policy.
-- Use one backend worker/replica for the current process-local snapshot signing
-  key; restarting invalidates attached context. Reinspect/replan afterward.
-- Before announcing a public URL, verify `/health`, terrain metadata/inspection,
-  map tiles, a real Jezero Marswalk, and a live cited chat answer with attached
-  context through the public frontend. External data-service availability and
-  provider limits remain dependencies.
+Set these **server-side** Vercel project environment variables in each intended
+Preview/Production environment:
 
-Hosting references: [Vercel monorepos](https://vercel.com/docs/monorepos),
-[Vercel environment variables](https://vercel.com/docs/environment-variables),
-[Railway FastAPI](https://railway.com/guides/fastapi).
+- `LLM_PROVIDER=groq`
+- `LLM_MODEL=openai/gpt-oss-120b`
+- `LLM_API_KEY`: a private, valid Groq key; never prefix it with `NEXT_PUBLIC_`.
+- `DARKSTAR_CONTEXT_SECRET`: an independently generated random secret of at least
+  32 characters, identical across backend instances within that environment.
+  It signs Explorer snapshots so another instance can validate attached chat
+  context. Use a different value in Preview and Production. Rotation invalidates
+  existing snapshots; reinspect/replan afterward.
+
+Services share project environment settings, but neither key is read by browser
+code. Do not place credentials in `vercel.json`. `.vercelignore` excludes local
+`.env` files and virtual environments, including CLI uploads.
+
+Navigation uses Python 3.12, the existing runtime dependencies in `pyproject.toml`,
+and `main:app`. Its build runs `build_terrain.py`, reusing the existing NASA
+preparation scripts. It bundles approximately 45.4 MB of validated MOLA/Jezero
+GeoTIFFs inside the service, retaining embedded provenance. On a clean cloud build,
+NASA downloads must succeed; missing terrain fails the build. Include repository
+files outside service roots so the build can access `scripts/`. Only processed
+GeoTIFFs and application sources are explicitly included; raw downloads are not
+runtime assets. No terrain downloads or filesystem writes occur during requests.
+
+Check locally with:
+
+```sh
+services/navigation/.venv/bin/python services/navigation/build_terrain.py
+npm run build --workspace @darkstar/web -- --webpack
+```
+
+Local build/entrypoint checks do not certify a Vercel deployment. A Vercel cloud
+build must still verify Linux rasterio/GDAL wheels and final function bundle size,
+including native libraries. The configured 120-second function limit must be
+supported by the project. Terrain caches are per-instance and disposable.
+Verify the public map, Jezero Marswalk and cited chat with attached context after
+deployment. Direct backend access should remain unavailable from the internet.
+
+References: [Services](https://vercel.com/docs/services),
+[service bindings](https://vercel.com/docs/services/bindings),
+[FastAPI](https://vercel.com/docs/frameworks/backend/fastapi).
 
 ## Repository
 

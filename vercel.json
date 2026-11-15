@@ -1,0 +1,28 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "web": {
+      "root": "apps/web",
+      "framework": "nextjs",
+      "bindings": [
+        { "type": "service", "service": "navigation", "format": "url", "env": "NAVIGATION_URL" }
+      ]
+    },
+    "navigation": {
+      "root": "services/navigation",
+      "framework": "fastapi",
+      "entrypoint": "main:app",
+      "buildCommand": "python build_terrain.py",
+      "functions": {
+        "main.py": {
+          "maxDuration": 120,
+          "includeFiles": "{src/**,data/processed/**}",
+          "excludeFiles": "{.env,.env.*,tests/**,.venv/**,__pycache__/**}"
+        }
+      }
+    }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": { "service": "web" } }
+  ]
+}

@@ -1,3 +1,5 @@
+export const maxDuration = 120;
+
 import { NextRequest } from "next/server";
 
 type Context = { params: Promise<{ path: string[] }> };
@@ -11,7 +13,7 @@ async function proxy(request: NextRequest, context: Context) {
   try {
     const body = request.method === "POST" ? await request.text() : undefined;
     if (body && body.length > 4000) return Response.json({ detail: "Request too large." }, { status: 413 });
-    const base = (process.env.DARKSTAR_API_URL || "http://127.0.0.1:8000").replace(/\/$/, "");
+    const base = (process.env.NAVIGATION_URL || process.env.DARKSTAR_API_URL || "http://127.0.0.1:8000").replace(/\/$/, "");
     const response = await fetch(`${base}/terrain/${endpoint}`, {
       method: request.method, body, headers: { "Content-Type": "application/json" },
       signal: AbortSignal.timeout(endpoint === "marswalk" ? 70000 : endpoint === "route" ? 35000 : 20000), cache: "no-store",

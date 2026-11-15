@@ -1,0 +1,11 @@
+**/.env
+**/.env.*
+**/.venv/**
+**/__pycache__/**
+**/.pytest_cache/**
+**/.ruff_cache/**
+**/*.tsbuildinfo
+**/*.log
+data/raw/**
+data/processed/**
+services/navigation/data/**

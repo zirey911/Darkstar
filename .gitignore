@@ -51,3 +51,5 @@ venv/
 *.npz
 *.hdf5
 *.parquet
+.vercel/
+services/navigation/data/
