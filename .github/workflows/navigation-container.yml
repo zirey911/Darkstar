@@ -1,0 +1,23 @@
+name: Navigation Linux container smoke
+on:
+  push:
+    branches: [main]
+    paths: ['services/navigation/**', 'scripts/**', '.dockerignore', '.github/workflows/navigation-container.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build with native libraries and real NASA terrain
+        run: docker build -f services/navigation/Dockerfile -t darkstar-navigation .
+      - name: Start within free-tier memory budget
+        run: docker run -d --name navigation --memory=512m --cpus=0.5 -e PORT=10000 -p 10000:10000 darkstar-navigation
+      - name: Verify startup and MOLA/Jezero routes
+        run: python3 scripts/smoke_navigation.py
+      - name: Container diagnostics
+        if: always()
+        run: docker logs navigation; docker inspect navigation --format '{{.State.OOMKilled}}'

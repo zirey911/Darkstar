@@ -8,7 +8,7 @@ export async function POST(request: Request) {
       return Response.json({ detail: "Conversation is too large. Start a new chat." }, { status: 413, headers });
     }
     const body = JSON.parse(raw);
-    const base = process.env.NAVIGATION_URL || process.env.DARKSTAR_API_URL || "http://127.0.0.1:8000";
+    const base = process.env.NAVIGATION_API_URL || process.env.NAVIGATION_URL || process.env.DARKSTAR_API_URL || "http://127.0.0.1:8000";
     const response = await fetch(`${base.replace(/\/$/, "")}/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

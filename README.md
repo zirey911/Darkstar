@@ -170,3 +170,32 @@ services; `scripts` prepares data and starts the backend; `docs` records provena
 architecture and setup. `data/raw` and `data/processed` are ignored local artifacts.
 See [development instructions](docs/DEVELOPMENT.md),
 [architecture](docs/ARCHITECTURE.md) and [project brief](docs/PROJECT_BRIEF.md).
+
+### Render Docker backend (native rasterio support)
+
+Use a Render **Web Service**, Docker runtime, Free instance. Repository root directory
+must be blank; Docker build context is `.` and Dockerfile is
+`services/navigation/Dockerfile`. Leave the Docker command override blank. Health
+check: `/health`. The image installs Debian `libexpat1` explicitly and builds both
+NASA DEMs with the existing scripts. Build/download errors fail the image build;
+only processed DEMs are copied into the runtime image.
+
+Set Render secrets `LLM_API_KEY` and `DARKSTAR_CONTEXT_SECRET` (32+ random characters),
+plus `LLM_PROVIDER=groq` and `LLM_MODEL=openai/gpt-oss-120b`. Do not set `VERCEL` on
+Render. On Vercel set server-only `NAVIGATION_API_URL=https://YOUR-SERVICE.onrender.com`
+and redeploy the frontend. This takes precedence over `NAVIGATION_URL`, then
+`DARKSTAR_API_URL`, then localhost. No browser CORS allowance is required.
+
+The image uses one Uvicorn worker, four concurrent connections maximum, a 32 MB
+GDAL cache and single-threaded numerical libraries. The Linux smoke workflow runs
+with 512 MB memory and tests real MOLA/Jezero routes. These bounds do not guarantee
+all large routes fit: concurrent/heavy workloads can return 503 or exceed memory.
+Render free services sleep when idle; open `/health` and wait for it to respond
+before a demo. Cold starts may exceed existing frontend timeouts; retry after
+warming. Errors remain visible; there are no fabricated fallback routes. Data is
+baked into the image, so restart does not require runtime downloads or a disk.
+
+Local check when Docker is available:
+`docker build -f services/navigation/Dockerfile -t darkstar-navigation .`, then
+`docker run --rm -p 10000:10000 -e PORT=10000 --memory=512m darkstar-navigation`.
+Run `python3 scripts/smoke_navigation.py` in another terminal.
